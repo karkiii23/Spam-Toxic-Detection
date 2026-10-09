@@ -1,30 +1,22 @@
 
-# Python
 __pycache__/
 *.py[cod]
 .venv/
 venv/
-env/
-
-# Secrets
 .env
 .env.*
 !.env.example
 
-# Local databases and backups
+# Local database and backups
 database/
 backup/
 *.db
 *.sqlite
 *.sqlite3
 
-# Dataset files (keep local)
+# Dataset files
 data/*.csv
-data/*.xlsx
-data/*.parquet
 
-# Notebook temporary files
+# Temporary files
 .ipynb_checkpoints/
-
-# Logs
 *.log
