@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Login | SecureText AI
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+
+    <style>
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            width: 100%;
+            padding-right: 44px;
+            box-sizing: border-box;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            padding: 4px;
+        }
+    </style>
+
+</head>
+
+
+<body class="auth-page">
+
+
+<div class="auth-container">
+
+
+    <div class="auth-brand">
+
+        <div class="auth-logo">
+            🛡️
+        </div>
+
+        <h1>
+            SecureText AI
+        </h1>
+
+        <p>
+            Spam & Toxic Content Detection
+        </p>
+
+    </div>
+
+
+    <div class="auth-card">
+
+        <h2>
+            Welcome Back
+        </h2>
+
+        <p class="auth-subtitle">
+            Sign in to access your security dashboard.
+        </p>
+
+
+        {% if error %}
+
+        <div class="auth-error">
+            ⚠️ {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <form
+            method="POST"
+            action="{{ url_for('login') }}"
+        >
+
+
+            <label>
+                Username
+            </label>
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Enter username"
+                required
+            >
+
+
+            <label>
+                Password
+            </label>
+
+            <div class="password-wrapper">
+                <input
+                type="password"
+                name="password"
+                placeholder="Enter password"
+                required
+            >
+                <button type="button" class="toggle-password" onclick="togglePassword(this)" aria-label="Show password">👁️</button>
+            </div>
+
+
+            <button
+                type="submit"
+                class="auth-button"
+            >
+                🔐 Sign In
+            </button>
+
+        </form>
+
+
+        <div class="auth-footer">
+
+            Don't have an account?
+
+            <a href="{{ url_for('register') }}">
+                Create Account
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="security-note">
+
+        🔒 Your credentials are securely stored.
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+function togglePassword(button) {
+    const input = button.parentElement.querySelector("input");
+    const showing = input.type === "text";
+    input.type = showing ? "password" : "text";
+    button.textContent = showing ? "👁️" : "🙈";
+    button.setAttribute("aria-label", showing ? "Show password" : "Hide password");
+}
+</script>
+
+</body>
+
+</html>

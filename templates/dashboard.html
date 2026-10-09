@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Security Dashboard
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+
+    <style>
+        .account-menu {
+            position: relative;
+            margin-left: auto;
+        }
+
+        .account-button {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: inherit;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .account-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 110%;
+            min-width: 180px;
+            background: #ffffff;
+            color: #111827;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .account-dropdown a {
+            display: block;
+            padding: 10px 14px;
+            color: #111827;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .account-dropdown a:hover {
+            background: #f1f5f9;
+        }
+
+        .account-menu:focus-within .account-dropdown {
+            display: block;
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🛡️
+        </div>
+
+        <div>
+
+            <h2>
+                SecureText AI
+            </h2>
+
+            <span>
+                Content Security System
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/">
+            Analyzer
+        </a>
+
+        <a
+            href="/dashboard"
+            class="nav-active"
+        >
+            Dashboard
+        </a>
+
+        <a href="/history">
+            History
+        </a>
+
+    </div>
+
+
+
+
+    <div class="account-menu">
+
+        <button class="account-button" type="button">
+            👤 {{ session["username"] }} ▼
+        </button>
+
+        <div class="account-dropdown">
+
+            <a href="{{ url_for('account') }}">👤 My Account</a>
+
+            <a href="{{ url_for('switch_account') }}">🔄 Switch Account</a>
+
+            <a href="{{ url_for('logout') }}">🚪 Logout</a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- MAIN -->
+
+<main class="main-container">
+
+
+    <!-- HEADER -->
+
+    <section class="dashboard-header">
+
+        <div>
+
+            <div class="hero-badge">
+                SECURITY DASHBOARD
+            </div>
+
+            <h1>
+                Detection
+                <span>Overview</span>
+            </h1>
+
+            <p>
+                Monitor your spam and toxic content
+                detection activity.
+            </p>
+
+        </div>
+
+
+        <form
+            action="/clear-history"
+            method="POST"
+        >
+
+            <button
+                class="clear-history-btn"
+                type="submit"
+                onclick="return confirm('Clear all dashboard history?')"
+            >
+                🗑️ Clear History
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- STAT CARDS -->
+
+    <section class="stats-grid">
+
+
+        <!-- TOTAL -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon blue">
+                📊
+            </div>
+
+            <div>
+
+                <span>
+                    TOTAL ANALYZED
+                </span>
+
+                <h2>
+                    {{ total }}
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- SPAM -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon red">
+                🚨
+            </div>
+
+            <div>
+
+                <span>
+                    SPAM DETECTED
+                </span>
+
+                <h2>
+                    {{ spam_count }}
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- TOXIC -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon orange">
+                ⚠️
+            </div>
+
+            <div>
+
+                <span>
+                    TOXIC DETECTED
+                </span>
+
+                <h2>
+                    {{ toxic_count }}
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- SAFE -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon green">
+                🛡️
+            </div>
+
+            <div>
+
+                <span>
+                    SAFE MESSAGES
+                </span>
+
+                <h2>
+                    {{ safe_count }}
+                </h2>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- RECENT ACTIVITY -->
+
+    <section class="dashboard-card">
+
+        <div class="dashboard-card-header">
+
+            <div>
+
+                <h2>
+                    Recent Analysis
+                </h2>
+
+                <p>
+                    Latest messages analyzed by the system
+                </p>
+
+            </div>
+
+            <a
+                href="/"
+                class="new-analysis-btn"
+            >
+                + New Analysis
+            </a>
+
+        </div>
+
+
+        {% if history %}
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Type</th>
+
+                        <th>Message</th>
+
+                        <th>Spam</th>
+
+                        <th>Toxic</th>
+
+                        <th>Overall</th>
+
+                        <th>Date</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for item in history %}
+
+                    <tr>
+
+                        <td>
+                            {{ loop.index }}
+                        </td>
+
+
+                        <td>
+
+                            {% if item.analysis_type == "Batch" %}
+
+                                <span class="badge batch-badge">
+                                    BATCH
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge single-badge">
+                                    SINGLE
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td class="message-cell">
+                            {{ item.message }}
+                        </td>
+
+
+                        <td>
+
+                            {% if item.spam_result == "SPAM" %}
+
+                                <span class="badge danger-badge">
+                                    SPAM
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge safe-badge">
+                                    NORMAL
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if item.toxic_result == "TOXIC" %}
+
+                                <span class="badge danger-badge">
+                                    TOXIC
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge safe-badge">
+                                    NORMAL
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if item.overall_result == "SAFE" %}
+
+                                <span class="badge safe-badge">
+                                    SAFE
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge danger-badge">
+                                    {{ item.overall_result }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ item.created_at }}
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-dashboard">
+
+            <div>
+                📭
+            </div>
+
+            <h3>
+                No analysis yet
+            </h3>
+
+            <p>
+                Analyze your first message to see
+                the results here.
+            </p>
+
+            <a href="/">
+                Start Analysis
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+</main>
+
+
+<footer>
+
+    <p>
+        SecureText AI • NLP & Machine Learning
+    </p>
+
+    <span>
+        Spam Detection + Toxic Content Detection
+    </span>
+
+</footer>
+
+
+</body>
+
+</html>

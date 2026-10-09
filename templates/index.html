@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Spam & Toxic Detection
+    </title>
+
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+
+    <style>
+        .account-menu {
+            position: relative;
+            margin-left: auto;
+        }
+
+        .account-button {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: inherit;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .account-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 110%;
+            min-width: 180px;
+            background: #ffffff;
+            color: #111827;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .account-dropdown a {
+            display: block;
+            padding: 10px 14px;
+            color: #111827;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .account-dropdown a:hover {
+            background: #f1f5f9;
+        }
+
+        .account-menu:focus-within .account-dropdown {
+            display: block;
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+====================================================== -->
+
+<nav class="navbar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🛡️
+        </div>
+
+        <div>
+
+            <h2>
+                SecureText
+            </h2>
+
+            <span>
+                Content Security System
+            </span>
+
+        </div>
+
+    </div>
+    <div class="nav-links">
+
+    <a
+        href="/"
+        class="nav-active"
+    >
+        Analyzer
+    </a>
+
+    <a href="/dashboard">
+        Dashboard
+    </a>
+
+    <a href="/history">
+        History
+    </a>
+
+    </div>
+
+
+
+    <div class="account-menu">
+
+        <button class="account-button" type="button">
+            👤 {{ session["username"] }} ▼
+        </button>
+
+        <div class="account-dropdown">
+
+            <a href="{{ url_for('account') }}">👤 My Account</a>
+
+            <a href="{{ url_for('switch_account') }}">🔄 Switch Account</a>
+
+            <a href="{{ url_for('logout') }}">🚪 Logout</a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- =====================================================
+     MAIN
+====================================================== -->
+
+<main class="main-container">
+
+
+    <!-- HEADER -->
+
+    <section class="hero">
+
+
+        <h1>
+            Spam & Toxic
+            <span>Detection</span>
+        </h1>
+
+        <p>
+            Analyze messages using machine learning
+            to detect spam and toxic content.
+        </p>
+
+    </section>
+
+
+    <!-- ERROR -->
+
+    {% if error %}
+
+    <div class="error-message">
+
+        ⚠️ {{ error }}
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- =================================================
+         MODE SELECTOR
+    ================================================== -->
+
+    <div class="mode-tabs">
+
+        <a
+            href="/"
+            class="{% if mode != 'batch' %}active{% endif %}"
+        >
+            📝 Single Analysis
+        </a>
+
+        <a
+            href="/?mode=batch"
+            class="{% if mode == 'batch' %}active{% endif %}"
+        >
+            📊 Batch Analysis
+        </a>
+
+    </div>
+
+
+    <!-- =================================================
+         SINGLE ANALYSIS
+    ================================================== -->
+
+    {% if mode != 'batch' %}
+
+    <section class="card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Analyze Message
+                </h2>
+
+                <p>
+                    Enter a message and our AI will analyze it.
+                </p>
+
+            </div>
+
+            <div class="card-icon">
+                🔍
+            </div>
+
+        </div>
+
+
+        <form
+            action="/predict"
+            method="POST"
+            onsubmit="startAnalysis(this)"
+        >
+
+            <div class="textarea-wrapper">
+
+                <textarea
+                    id="message"
+                    name="message"
+                    placeholder="Type or paste your message here..."
+                    maxlength="5000"
+                    required
+                >{{ message if message else "" }}</textarea>
+
+                <div class="textarea-footer">
+
+                    <span>
+                        <span id="wordCount">0</span>
+                        words
+                    </span>
+
+                    <span>
+                        <span id="charCount">0</span>
+                        / 5000
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="button-row">
+
+                <button
+                    type="button"
+                    class="btn btn-clear"
+                    onclick="clearMessage()"
+                >
+                    🧹 Clear
+                </button>
+
+                <button
+                    type="submit"
+                    id="analyzeButton"
+                    class="btn btn-analyze"
+                >
+                    🔍 Analyze Message
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+    <!-- =================================================
+         SINGLE RESULTS
+    ================================================== -->
+
+    {% if overall_result %}
+
+    <section class="results-section">
+
+        <div class="section-title">
+
+            <div>
+
+                <h2>
+                    Analysis Results
+                </h2>
+
+                <p>
+                    AI security assessment of your message
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="result-grid">
+
+
+            <!-- SPAM -->
+
+            <div class="result-card">
+
+                <div class="result-icon">
+                    📩
+                </div>
+
+                <div>
+
+                    <span class="result-label">
+                        SPAM DETECTION
+                    </span>
+
+                    <h3
+                        class="{% if spam_result == 'SPAM' %}danger{% else %}safe{% endif %}"
+                    >
+
+                        {% if spam_result == 'SPAM' %}
+                            ⚠️ SPAM
+                        {% else %}
+                            ✓ NORMAL
+                        {% endif %}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+            <!-- TOXIC -->
+
+            <div class="result-card">
+
+                <div class="result-icon">
+                    🛡️
+                </div>
+
+                <div>
+
+                    <span class="result-label">
+                        TOXIC DETECTION
+                    </span>
+
+                    <h3
+                        class="{% if toxic_result == 'TOXIC' %}danger{% else %}safe{% endif %}"
+                    >
+
+                        {% if toxic_result == 'TOXIC' %}
+                            ⚠️ TOXIC
+                        {% else %}
+                            ✓ NORMAL
+                        {% endif %}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- OVERALL -->
+
+        <div
+            class="overall-card
+            {% if overall_result == 'SAFE' %}
+                overall-safe
+            {% else %}
+                overall-danger
+            {% endif %}"
+        >
+
+            <div class="overall-icon">
+
+                {% if overall_result == 'SAFE' %}
+                    ✓
+                {% else %}
+                    !
+                {% endif %}
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    OVERALL SECURITY STATUS
+                </span>
+
+                <h2>
+                    {{ overall_result }}
+                </h2>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+    {% endif %}
+
+
+    {% endif %}
+
+
+    <!-- =================================================
+         BATCH ANALYSIS
+    ================================================== -->
+
+    {% if mode == 'batch' %}
+
+    <section class="card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Batch Analysis
+                </h2>
+
+                <p>
+                    Enter one message per line to analyze
+                    multiple messages at once.
+                </p>
+
+            </div>
+
+            <div class="card-icon">
+                📊
+            </div>
+
+        </div>
+
+
+        <form
+            action="/batch"
+            method="POST"
+            onsubmit="startAnalysis(this)"
+        >
+
+            <div class="textarea-wrapper">
+
+                <textarea
+                    name="batch_messages"
+                    id="batchMessages"
+                    placeholder="Message 1&#10;Message 2&#10;Message 3&#10;Message 4..."
+                    required
+                ></textarea>
+
+                <div class="textarea-footer">
+
+                    <span>
+                        One message per line
+                    </span>
+
+                    <span>
+                        <span id="batchCount">0</span>
+                        messages
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="button-row">
+
+                <button
+                    type="button"
+                    class="btn btn-clear"
+                    onclick="clearBatch()"
+                >
+                    🧹 Clear
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-analyze"
+                >
+                    📊 Analyze All
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+    <!-- BATCH RESULTS -->
+
+    {% if batch_results %}
+
+    <section class="batch-results">
+
+        <div class="batch-header">
+
+            <div>
+
+                <h2>
+                    Batch Results
+                </h2>
+
+                <p>
+                    {{ batch_count }} messages analyzed
+                </p>
+
+            </div>
+
+
+            <form
+                action="/download"
+                method="POST"
+            >
+
+                <textarea
+                    name="batch_messages"
+                    hidden
+                >{% for item in batch_results %}{{ item.message }}
+{% endfor %}</textarea>
+
+                <button
+                    type="submit"
+                    class="download-btn"
+                >
+                    📥 Download CSV
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Message</th>
+
+                        <th>Spam</th>
+
+                        <th>Toxic</th>
+
+                        <th>Overall</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for item in batch_results %}
+
+                    <tr>
+
+                        <td>
+                            {{ item.id }}
+                        </td>
+
+                        <td class="message-cell">
+                            {{ item.message }}
+                        </td>
+
+                        <td>
+
+                            {% if item.spam == 'SPAM' %}
+
+                                <span class="badge danger-badge">
+                                    SPAM
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge safe-badge">
+                                    NORMAL
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if item.toxic == 'TOXIC' %}
+
+                                <span class="badge danger-badge">
+                                    TOXIC
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge safe-badge">
+                                    NORMAL
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if item.overall == 'SAFE' %}
+
+                                <span class="badge safe-badge">
+                                    SAFE
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge danger-badge">
+                                    {{ item.overall }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+    {% endif %}
+
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+====================================================== -->
+
+<footer>
+
+    <p>
+        SecureText • NLP & Machine Learning
+    </p>
+
+    <span>
+        Spam Detection + Toxic Content Detection
+    </span>
+
+</footer>
+
+
+<script>
+
+/* =====================================================
+   SINGLE MESSAGE
+====================================================== */
+
+const messageBox =
+    document.getElementById("message");
+
+const charCount =
+    document.getElementById("charCount");
+
+const wordCount =
+    document.getElementById("wordCount");
+
+
+function updateMessageCount() {
+
+    if (!messageBox) {
+        return;
+    }
+
+    const text =
+        messageBox.value;
+
+    if (charCount) {
+        charCount.textContent =
+            text.length;
+    }
+
+    if (wordCount) {
+
+        const words =
+            text.trim()
+                ? text.trim().split(/\s+/).length
+                : 0;
+
+        wordCount.textContent =
+            words;
+    }
+}
+
+
+function clearMessage() {
+
+    if (!messageBox) {
+        return;
+    }
+
+    messageBox.value = "";
+
+    updateMessageCount();
+
+    messageBox.focus();
+}
+
+
+if (messageBox) {
+
+    messageBox.addEventListener(
+        "input",
+        updateMessageCount
+    );
+
+    updateMessageCount();
+}
+
+
+/* =====================================================
+   BATCH
+====================================================== */
+
+const batchBox =
+    document.getElementById("batchMessages");
+
+const batchCount =
+    document.getElementById("batchCount");
+
+
+function updateBatchCount() {
+
+    if (!batchBox || !batchCount) {
+        return;
+    }
+
+    const lines =
+        batchBox.value
+            .split("\n")
+            .filter(
+                line => line.trim() !== ""
+            );
+
+    batchCount.textContent =
+        lines.length;
+}
+
+
+function clearBatch() {
+
+    if (!batchBox) {
+        return;
+    }
+
+    batchBox.value = "";
+
+    updateBatchCount();
+
+    batchBox.focus();
+}
+
+
+if (batchBox) {
+
+    batchBox.addEventListener(
+        "input",
+        updateBatchCount
+    );
+
+    updateBatchCount();
+}
+
+</script>
+<!-- =====================================================
+     ANALYSIS LOADING SCREEN
+===================================================== -->
+
+<div
+    id="loadingScreen"
+    class="loading-screen"
+>
+
+    <div class="loading-box">
+
+        <div class="loader"></div>
+
+        <h2>
+            Analyzing Message
+        </h2>
+
+        <p id="loadingText">
+            Processing your message...
+        </p>
+
+        <div class="loading-progress">
+
+            <div
+                id="loadingProgress"
+            ></div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+const WAIT_SECONDS = 20;
+
+function startAnalysis(form) {
+
+    const loadingScreen =
+        document.getElementById("loadingScreen");
+
+    const loadingText =
+        document.getElementById("loadingText");
+
+    const progress =
+        document.getElementById("loadingProgress");
+
+    const button =
+        form.querySelector('button[type="submit"]');
+
+
+    if (loadingScreen) {
+        loadingScreen.classList.add("show");
+    }
+
+    if (button) {
+        button.disabled = true;
+        button.innerHTML = "⏳ Analyzing...";
+    }
+
+
+    const startTime = Date.now();
+
+    const interval = setInterval(function () {
+
+        const elapsed =
+            (Date.now() - startTime) / 1000;
+
+        const remaining =
+            Math.max(0, Math.ceil(WAIT_SECONDS - elapsed));
+
+        const percent =
+            Math.min(100, (elapsed / WAIT_SECONDS) * 100);
+
+        if (progress) {
+            progress.style.width = percent + "%";
+        }
+
+        if (loadingText) {
+            loadingText.textContent =
+                remaining > 0
+                    ? `Time remaining: ${remaining} seconds`
+                    : "Finishing up...";
+        }
+
+        if (elapsed >= WAIT_SECONDS) {
+            clearInterval(interval);
+        }
+
+    }, 100);
+
+}
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        My Account | SecureText
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🛡️
+        </div>
+
+        <div>
+
+            <h2>
+                SecureText
+            </h2>
+
+            <span>
+                Content Security System
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/">
+            Analyzer
+        </a>
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/history">
+            History
+        </a>
+
+    </div>
+
+</nav>
+
+
+<main class="main-container">
+
+
+    <section class="dashboard-header">
+
+        <div>
+
+            <div class="hero-badge">
+                ACCOUNT
+            </div>
+
+            <h1>
+                My
+                <span>Account</span>
+            </h1>
+
+            <p>
+                Your login details for SecureText.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <section class="dashboard-card">
+
+        <table>
+
+            <tbody>
+
+                <tr>
+                    <th>Username</th>
+                    <td>{{ user["username"] }}</td>
+                </tr>
+
+                <tr>
+                    <th>Email</th>
+                    <td>{{ user["email"] }}</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+
+</main>
+
+
+<footer>
+
+    <p>
+        SecureText • NLP & Machine Learning
+    </p>
+
+    <span>
+        Spam Detection + Toxic Content Detection
+    </span>
+
+</footer>
+
+
+</body>
+
+</html>

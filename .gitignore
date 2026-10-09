@@ -1,0 +1,30 @@
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Local databases and backups
+database/
+backup/
+*.db
+*.sqlite
+*.sqlite3
+
+# Dataset files (keep local)
+data/*.csv
+data/*.xlsx
+data/*.parquet
+
+# Notebook temporary files
+.ipynb_checkpoints/
+
+# Logs
+*.log

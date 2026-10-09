@@ -1,0 +1,10 @@
+
+Flask
+Werkzeug
+pandas
+numpy
+scikit-learn==1.9.1
+joblib
+nltk
+psycopg[binary]
+gunicorn
