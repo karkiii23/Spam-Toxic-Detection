@@ -86,7 +86,7 @@
         <div>
 
             <h2>
-                SecureText 
+                SecureText
             </h2>
 
             <span>
@@ -305,12 +305,23 @@
 
             </div>
 
-            <a
-                href="/"
-                class="new-analysis-btn"
-            >
-                + New Analysis
-            </a>
+            <div style="display: flex; gap: 10px; align-items: center;">
+
+                <a
+                    href="{{ url_for('generate_report') }}"
+                    class="new-analysis-btn"
+                >
+                    📄 Generate PDF Report
+                </a>
+
+                <a
+                    href="/"
+                    class="new-analysis-btn"
+                >
+                    + New Analysis
+                </a>
+
+            </div>
 
         </div>
 
@@ -477,13 +488,52 @@
     </section>
 
 
+    <!-- CYBERCRIME REPORTING RESOURCES -->
+
+    <section class="cybercrime-resources" aria-labelledby="cybercrime-title">
+      <div class="cybercrime-heading">
+        <h2 id="cybercrime-title">Cybercrime Reporting Resources</h2>
+        <p>Detected spam or toxic content is not itself an official cybercrime report. If you believe you are a victim, use the appropriate official channel below.</p>
+      </div>
+
+      <article class="cybercrime-card">
+        <h3>1. Cybercrime Portal — Online abuse and cybercrime</h3>
+        <p>Report online harassment, cyberbullying, threats, impersonation, and phishing-related incidents.</p>
+        <p><strong>Official Government of India portal</strong></p>
+        <a href="https://cybercrime.gov.in/" target="_blank" rel="noopener noreferrer">Report cybercrime online ↗</a>
+      </article>
+
+      <article class="cybercrime-card">
+        <h3>2. Cybercrime helpline — 1930</h3>
+        <p>Call <strong>1930</strong> if you have suffered financial cyber fraud, such as losing money to a phishing link or scam. Report the incident as quickly as possible.</p>
+        <p>For immediate danger, contact police or call <strong>112</strong>.</p>
+      </article>
+
+      <article class="cybercrime-card">
+        <h3>3. Sanchar Saathi / Chakshu — Suspicious calls, SMS and WhatsApp messages</h3>
+        <p>Use Chakshu to report suspected fraud communications, impersonation, and certain malicious messages received through calls, SMS, or WhatsApp.</p>
+        <a href="https://sancharsaathi.gov.in/" target="_blank" rel="noopener noreferrer">Open Sanchar Saathi ↗</a>
+      </article>
+    </section>
+
+    <style>
+    .cybercrime-resources { margin: 28px 0; padding: 22px; border: 1px solid #dce3ec; border-radius: 14px; background: #fff; }
+    .cybercrime-heading h2 { margin: 0 0 8px; }
+    .cybercrime-heading p { color: #596579; margin-bottom: 18px; }
+    .cybercrime-card { padding: 16px; margin-top: 12px; border: 1px solid #e5eaf0; border-radius: 10px; background: #f8fafc; }
+    .cybercrime-card h3 { margin: 0 0 8px; font-size: 1rem; }
+    .cybercrime-card p { margin: 6px 0; line-height: 1.55; }
+    .cybercrime-card a { display: inline-block; margin-top: 8px; font-weight: 600; color: #1459a6; text-decoration: none; }
+    .cybercrime-card a:hover { text-decoration: underline; }
+    </style>
+
 </main>
 
 
 <footer>
 
     <p>
-        SecureText  • NLP & Machine Learning
+        SecureText • NLP & Machine Learning
     </p>
 
     <span>

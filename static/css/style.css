@@ -1541,3 +1541,41 @@ footer p {
     font-size: 11px;
 
 }
+
+/* Sample messages */
+
+.sample-section {
+    margin-top: 25px;
+}
+
+.sample-section h3 {
+    margin-bottom: 8px;
+}
+
+.sample-category {
+    margin-top: 18px;
+}
+
+.sample-category h4 {
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.sample-btn {
+    display: inline-block;
+    margin: 4px 5px 4px 0;
+    padding: 9px 12px;
+    border: 1px solid #334155;
+    border-radius: 7px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.2s;
+    text-align: left;
+}
+
+.sample-btn:hover {
+    background: #334155;
+    border-color: #6366f1;
+}

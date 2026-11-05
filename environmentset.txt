@@ -1,0 +1,14 @@
+in cmd
+ python -c "import secrets; print(secrets.token_hex(32))"
+84432f1361539f26d32d358d9ed6223aa63c92e516b8f854d408049101053430
+PS C:\Users\sarik\Desktop\Spam-Toxic-Detection> set "SECRET_KEY=84432f1361539f26d32d358d9ed6223aa63c92e516b8f854d408049101053430"
+PS C:\Users\sarik\Desktop\Spam-Toxic-Detection> set "DATABASE_URL=postgresql://spam_toxic_detection_user:se7ljCl5mAiJ85H5sItuqPZCuHpjjBCI@dpg-dbm9qeo8v5cc73e0arpg-a.singapore-postgres.render.com/spam_toxic_detection"
+in powershell
+:\Users\sarik\Desktop\Spam-Toxic-Detection> python -c "import secrets; print(secrets.token_hex(32))"              
+72e4212911001213ae152e022237ec8ef08c62774da9ec79209a406d5fae9d66                                
+PS C:\Users\sarik\Desktop\Spam-Toxic-Detection> $env:SECRET_KEY = "72e4212911001213ae152e022237ec8ef08c62774da9ec79209a406d5fae9d66"                           
+PS C:\Users\sarik\Desktop\Spam-Toxic-Detection> $env:DATABASE_URL = "postgresql://spam_toxic_detection_user:se7ljCl5mAiJ85H5sItuqPZCuHpjjBCI@dpg-dbm9qeo8v5cc73e0arpg-a.singapore-postgres.render.com/spam_toxic_detection"
+PS C:\Users\sarik\Desktop\Spam-Toxic-Detection> python app.py
+if ($env:SECRET_KEY) { "SECRET_KEY configured" } else { "SECRET_KEY missing" }
+>> 
+>> if ($env:DATABASE_URL) { "DATABASE_URL configured" } else { "DATABASE_URL missing" }

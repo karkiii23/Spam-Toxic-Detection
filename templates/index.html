@@ -283,6 +283,35 @@
 
         </form>
 
+        <!-- Sample Messages Section -->
+        <div class="sample-section">
+            <h3>💡 Try Sample Messages</h3>
+            <p>Select an example to fill the message box.</p>
+
+            <div class="sample-category">
+                <h4>🟢 Normal Messages</h4>
+                <button type="button" class="sample-btn">Hello! How are you doing today?</button>
+                <button type="button" class="sample-btn">The application is very useful and easy to use.</button>
+                <button type="button" class="sample-btn">Your assignment has been submitted successfully.</button>
+            </div>
+
+            <div class="sample-category">
+                <h4>🔴 Spam &amp; Promotional Messages</h4>
+                <button type="button" class="sample-btn">Congratulations! You have won 10 lakh rupees. Click this link immediately to claim your prize!</button>
+                <button type="button" class="sample-btn">You have won a free iPhone. Claim your gift now!</button>
+                <button type="button" class="sample-btn">Your OTP is required to receive your cashback reward.</button>
+            </div>
+
+            <div class="sample-category">
+                <h4>🔴 Toxic &amp; Abusive Messages</h4>
+                <button type="button" class="sample-btn">You are stupid and completely useless.</button>
+                <button type="button" class="sample-btn">Nobody likes you. You are an idiot.</button>
+                <button type="button" class="sample-btn">You are pathetic and should be ashamed of yourself.</button>
+            </div>
+
+        </div>
+
+
     </section>
 
 
@@ -900,6 +929,20 @@ function startAnalysis(form) {
 
 </script>
 
+
+
+<script>
+/* Sample message buttons: fill the single-message box */
+document.querySelectorAll(".sample-btn").forEach(function (button) {
+    button.addEventListener("click", function () {
+        const box = document.getElementById("message");
+        if (!box) { return; }
+        box.value = this.textContent.trim();
+        updateMessageCount();
+        box.focus();
+    });
+});
+</script>
 
 </body>
 
