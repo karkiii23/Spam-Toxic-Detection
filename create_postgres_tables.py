@@ -2,7 +2,7 @@
 import os
 import psycopg
 
-database_url = "postgresql://spam_toxic_db_user:Uz1iWznUs00CeNCYAU8rtKRp8KNwu5hT@dpg-db495rm0tbcc73djie50-a.singapore-postgres.render.com/spam_toxic_db"
+database_url = os.environ.get("DATABASE_URL")
 
 if not database_url:
     raise RuntimeError("DATABASE_URL is not set.")

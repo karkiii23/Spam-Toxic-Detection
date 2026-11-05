@@ -1,4 +1,3 @@
-
 Flask
 Werkzeug
 pandas
@@ -8,3 +7,4 @@ joblib
 nltk
 psycopg[binary]
 gunicorn
+reportlab
